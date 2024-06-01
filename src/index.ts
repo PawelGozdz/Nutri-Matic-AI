@@ -1,8 +1,24 @@
 import 'dotenv/config';
+import path from 'path';
 import { client } from './client';
+import { CommandService, EventService } from './libs';
 
-client.on('ready', (c) => {
-  console.log(`***${c.user.username} is ONLINE***`);
-});
+const commandsService = new CommandService(client, {
+  commandsDir: path.join(__dirname, 'commands'),
+})
 
-client.login(process.env.DISCORD_OAUTH_TOKEN);
+const eventsService = new EventService(client, {
+  eventsDir: path.join(__dirname, 'events'),
+})
+
+main();
+
+async function main() {
+  await commandsService.init();
+  await eventsService.init();
+
+  console.log('COMM', commandsService.commands)
+  console.log('EVENTS', eventsService.events)
+
+  client.login(process.env.DISCORD_OAUTH_TOKEN);
+}

@@ -1,6 +1,6 @@
 import { Client, Collection, REST, Routes } from "discord.js";
 import { Logger } from "../logger";
-import { Command } from "../types";
+import { Command, IBuilders } from "../types";
 import { isConstructorFunction, loadFiles } from "../utils";
 
 interface CommandServiceOptions {
@@ -11,7 +11,7 @@ interface CommandServiceOptions {
 }
 
 export class CommandService {
-  commands: Collection<string, Command> = new Collection();
+  commands: Collection<string, Command & IBuilders> = new Collection();
   rest = new REST({ version: "10" });
 
   constructor(
@@ -37,7 +37,7 @@ export class CommandService {
       for (const CommandClass of Object.values(file)) {
         if (!isConstructorFunction(CommandClass)) continue;
 
-        const instance = new CommandClass();
+        const instance = new CommandClass() as IBuilders;
 
         if (instance instanceof Command) {
           this.commands.set(instance.name, instance);

@@ -46,12 +46,12 @@ export class EventService {
 
   private async registerEvents() {
     for await (const event of this.events.values()) {
-      this.client.on(event.name, (client: Client, ...args: ClientEvents[]) => {
+      this.client.on(event.name, (...args: ClientEvents[]) => {
         const handler = this.events.get(event.name);
         if (!handler) {
           Logger.info(`Event handler for @${event.name}@ not found`);
         } else {
-          handler.execute(client, args);
+          handler.execute(...args);
         }
       });
     }

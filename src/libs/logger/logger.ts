@@ -1,8 +1,8 @@
 interface ILogger {
-  info(message: string, obj?: object | unknown, noIcon?: boolean): void;
-  warn(message: string, obj?: object | unknown, noIcon?: boolean): void;
-  error(message: string, obj?: object | unknown, noIcon?: boolean): void;
-  success(message: string, obj?: object | unknown, noIcon?: boolean): void;
+  info(message: string, ...args: unknown[]): void;
+  warn(message: string, ...args: unknown[]): void;
+  error(message: string, ...args: unknown[]): void;
+  success(message: string, ...args: unknown[]): void;
 }
 
 enum LogLevel {
@@ -20,22 +20,14 @@ class ConsoleLogger implements ILogger {
     [LogLevel.SUCCESS]: "✅",
   };
 
-  private log(
-    level: LogLevel,
-    message: string,
-    obj?: object | unknown,
-    noIcon?: boolean
-  ) {
-    const icon = noIcon ? "" : `${this.emojiMap[level]} `;
+  private log(level: LogLevel, message: string, ...args: unknown[]) {
+    const icon = `${this.emojiMap[level]} `;
     const output = `${icon}${level}: ${message}`;
-    let objOutput: object | unknown;
 
-    if (obj && typeof obj === "object") {
-      objOutput = obj;
-    }
+    const logOutput: any[] = [output];
 
-    const logOutput = [output] as any | any[];
-    if (objOutput) logOutput.push(objOutput as object);
+    const filteredArgs = args?.filter(Boolean);
+    if (filteredArgs?.length > 0) logOutput.push(...args);
 
     if (level === LogLevel.ERROR) {
       console.error(...logOutput);
@@ -44,20 +36,20 @@ class ConsoleLogger implements ILogger {
     }
   }
 
-  info(message: string, obj?: object | unknown, noIcon?: boolean) {
-    this.log(LogLevel.INFO, message, obj, noIcon);
+  info(message: string, ...args: unknown[]) {
+    this.log(LogLevel.INFO, message, ...args);
   }
 
-  warn(message: string, obj?: object | unknown, noIcon?: boolean) {
-    this.log(LogLevel.WARN, message, obj, noIcon);
+  warn(message: string, ...args: unknown[]) {
+    this.log(LogLevel.WARN, message, ...args);
   }
 
-  error(message: string, obj?: object | unknown, noIcon?: boolean) {
-    this.log(LogLevel.ERROR, message, obj, noIcon);
+  error(message: string, ...args: unknown[]) {
+    this.log(LogLevel.ERROR, message, ...args);
   }
 
-  success(message: string, obj?: object | unknown, noIcon?: boolean) {
-    this.log(LogLevel.SUCCESS, message, obj, noIcon);
+  success(message: string, ...args: unknown[]) {
+    this.log(LogLevel.SUCCESS, message, ...args);
   }
 }
 

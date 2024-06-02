@@ -1,7 +1,11 @@
 import { readdirSync, statSync } from "fs";
 import { extname, join } from "path";
+import { Logger } from "../logger";
 
-export function getFilesInDir(dir: string, extension?: string | string[]): string[] {
+export function getFilesInDir(
+  dir: string,
+  extension?: string | string[]
+): string[] {
   try {
     let results: string[] = [];
     const list = readdirSync(dir);
@@ -20,8 +24,8 @@ export function getFilesInDir(dir: string, extension?: string | string[]): strin
 
     return results;
   } catch (error: Error | any) {
-    if (error.code === 'ENOENT') {
-      console.warn(`Directory not found: ${dir}`);
+    if (error.code === "ENOENT") {
+      Logger.warn(`Directory not found: ${dir}`);
       return [];
     } else {
       throw error;
@@ -29,11 +33,14 @@ export function getFilesInDir(dir: string, extension?: string | string[]): strin
   }
 }
 
-function matchExtension(fileExtension: string, extensions: string | string[]): boolean {
-  if (typeof extensions === 'string') {
+function matchExtension(
+  fileExtension: string,
+  extensions: string | string[]
+): boolean {
+  if (typeof extensions === "string") {
     const match = extensions.match(/{(.*)}/);
     if (match) {
-      extensions = match[1].split(',');
+      extensions = match[1].split(",");
     } else {
       extensions = [extensions];
     }

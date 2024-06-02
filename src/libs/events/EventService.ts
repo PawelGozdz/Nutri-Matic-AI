@@ -1,6 +1,7 @@
-import { Client, ClientEvents, Collection } from 'discord.js';
-import { Event } from '../types';
-import { isConstructorFunction, loadFiles } from '../utils';
+import { Client, ClientEvents, Collection } from "discord.js";
+import { Logger } from "../logger";
+import { Event } from "../types";
+import { isConstructorFunction, loadFiles } from "../utils";
 
 interface EventServiceOptions {
   registerEvents?: boolean;
@@ -13,18 +14,19 @@ export class EventService {
 
   constructor(
     private client: Client,
-    private options: EventServiceOptions,
+    private options: EventServiceOptions
   ) {
     this.options = {
       registerEvents: true,
-      eventFilePattern: '{.js,.ts}',
+      eventFilePattern: "{.js,.ts}",
       ...options,
     };
   }
 
   async init() {
-
-    const files = await loadFiles(`**/*${this.options.eventFilePattern}`, { dir: this.options.eventsDir });
+    const files = await loadFiles(`**/*${this.options.eventFilePattern}`, {
+      dir: this.options.eventsDir,
+    });
     for (const file of files) {
       for (const EventClass of Object.values(file)) {
         if (!isConstructorFunction(EventClass)) continue;
@@ -47,7 +49,7 @@ export class EventService {
       this.client.on(event.name, (client: Client, ...args: ClientEvents[]) => {
         const handler = this.events.get(event.name);
         if (!handler) {
-          console.log(`Event handler for @${event.name}@ not found`);
+          Logger.info(`Event handler for @${event.name}@ not found`);
         } else {
           handler.execute(client, args);
         }

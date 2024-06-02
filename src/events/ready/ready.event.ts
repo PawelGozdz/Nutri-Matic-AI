@@ -1,13 +1,12 @@
-import { Client } from 'discord.js';
-import { Event } from '../../libs';
+import { Client } from "discord.js";
+import { Event, Logger } from "../../libs";
 
-export class ReadyEvent extends Event<'ready'> {
-  name = 'ready';
+export class ReadyEvent extends Event<"ready"> {
+  name = "ready";
   once = true;
-  description = 'Ready event';
+  description = "Ready event";
 
   async execute(client: Client<true>) {
-    console.log(`Logged in as ${client.user?.tag}!`)
+    Logger.info(`Logged in as ${client.user?.tag}!`);
   }
-};
-
+}

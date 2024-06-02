@@ -1,4 +1,4 @@
-export * from './commands'
-export * from './events'
-export * from './types'
-
+export * from "./commands";
+export * from "./events";
+export * from "./logger";
+export * from "./types";

@@ -19,8 +19,20 @@ async function main() {
   await commandsService.init();
   await eventsService.init();
 
-  Logger.info("COMM", commandsService.commands);
-  Logger.info("EVENsTS", eventsService.events);
+  Logger.info(
+    "COMMANDS",
+    commandsService.commands.map((c) => ({
+      name: c.name,
+      description: c.description,
+    }))
+  );
+  Logger.info(
+    "EVENTS",
+    eventsService.events.map((e) => ({
+      name: e.name,
+      description: e.description,
+    }))
+  );
 
   client.login(process.env.DISCORD_OAUTH_TOKEN);
 }

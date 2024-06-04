@@ -1,8 +1,8 @@
 interface ILogger {
-  info(message: string, ...args: unknown[]): void;
-  warn(message: string, ...args: unknown[]): void;
-  error(message: string, ...args: unknown[]): void;
-  success(message: string, ...args: unknown[]): void;
+  info(...args: unknown[]): void;
+  warn(...args: unknown[]): void;
+  error(...args: unknown[]): void;
+  success(...args: unknown[]): void;
 }
 
 enum LogLevel {
@@ -20,9 +20,9 @@ class ConsoleLogger implements ILogger {
     [LogLevel.SUCCESS]: "✅",
   };
 
-  private log(level: LogLevel, message: string, ...args: unknown[]) {
+  private log(level: LogLevel, ...args: unknown[]) {
     const icon = `${this.emojiMap[level]} `;
-    const output = `${icon}${level}: ${message}`;
+    const output = `${icon}${level}:`;
 
     const logOutput: any[] = [output];
 
@@ -36,20 +36,20 @@ class ConsoleLogger implements ILogger {
     }
   }
 
-  info(message: string, ...args: unknown[]) {
-    this.log(LogLevel.INFO, message, ...args);
+  info(...args: unknown[]) {
+    this.log(LogLevel.INFO, ...args);
   }
 
-  warn(message: string, ...args: unknown[]) {
-    this.log(LogLevel.WARN, message, ...args);
+  warn(...args: unknown[]) {
+    this.log(LogLevel.WARN, ...args);
   }
 
-  error(message: string, ...args: unknown[]) {
-    this.log(LogLevel.ERROR, message, ...args);
+  error(...args: unknown[]) {
+    this.log(LogLevel.ERROR, ...args);
   }
 
-  success(message: string, ...args: unknown[]) {
-    this.log(LogLevel.SUCCESS, message, ...args);
+  success(...args: unknown[]) {
+    this.log(LogLevel.SUCCESS, ...args);
   }
 }
 

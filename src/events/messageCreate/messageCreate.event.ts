@@ -6,6 +6,8 @@ export class MessageCreateEvent extends Event<Events.MessageCreate> {
   description = "Message Create";
 
   async execute(message: Message) {
-    Logger.info(message);
+    if (message.author.bot) return;
+
+    Logger.info("MESSAGE**: ", message.content);
   }
 }

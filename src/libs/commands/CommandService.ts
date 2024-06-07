@@ -1,4 +1,4 @@
-import { Client, Collection, REST, Routes } from "discord.js";
+import { Client, Collection, Events, REST, Routes } from "discord.js";
 import { Logger } from "../logger";
 import { Command, IBuilders } from "../types";
 import { isConstructorFunction, loadFiles } from "../utils";
@@ -78,10 +78,7 @@ export class CommandService {
   private async registerCommands() {
     Logger.info("Started refreshing application (/) commands.\n");
 
-    const commands = this.commands.map((command) => ({
-      name: command.name,
-      description: command.description,
-    }));
+    const commands = this.commands.map((command) => command);
 
     if (commands.length > 0) {
       await this.rest.put(
@@ -99,7 +96,7 @@ export class CommandService {
   }
 
   private async executeCommands() {
-    this.client.on("interactionCreate", async (interaction) => {
+    this.client.on(Events.InteractionCreate, async (interaction) => {
       if (!interaction.isCommand() || !interaction.isChatInputCommand()) return;
 
       const command = this.commands.get(interaction.commandName);
@@ -112,11 +109,17 @@ export class CommandService {
           `Error executing command ${interaction.commandName}:`,
           error
         );
-        await interaction.reply({
-          content: "There was an error while executing this command!",
-          ephemeral: true,
-        });
-        throw error;
+        if (interaction.replied || interaction.deferred) {
+          await interaction.followUp({
+            content: "There was an error while executing this command!",
+            ephemeral: true,
+          });
+        } else {
+          await interaction.reply({
+            content: "There was an error while executing this command!",
+            ephemeral: true,
+          });
+        }
       }
     });
   }

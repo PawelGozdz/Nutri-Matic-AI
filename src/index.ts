@@ -6,6 +6,7 @@ import { errorHandling } from "./utils/ErrorHandler";
 
 const commandsService = new CommandService(client, {
   commandsDir: path.join(__dirname, "commands"),
+  // cleanup: true,
 });
 
 const eventsService = new EventService(client, {

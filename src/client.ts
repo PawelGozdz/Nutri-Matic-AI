@@ -1,4 +1,4 @@
-import { Client, IntentsBitField } from 'discord.js';
+import { Client, IntentsBitField } from "discord.js";
 
 export const client = new Client({
   intents: [
@@ -8,4 +8,3 @@ export const client = new Client({
     IntentsBitField.Flags.MessageContent,
   ],
 });
-
